@@ -1,7 +1,7 @@
 package com.gmail.yeritsyankoryun.weather.service;
 
 import com.gmail.yeritsyankoryun.weather.dao.WeatherDataAccessService;
-import com.gmail.yeritsyankoryun.weather.model.Weather;
+import com.gmail.yeritsyankoryun.weather.model.WeatherInfoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +16,20 @@ public class WeatherService {
     public WeatherService(WeatherDataAccessService weatherDataAccessService) {
         this.weatherDataAccessService = weatherDataAccessService;
     }
-    public List<Weather> getAllWeather(){
+
+    public List<WeatherInfoModel> getAllWeather() {
         return weatherDataAccessService.selectAllWeather();
     }
 
-    public Optional<Weather> getByCC(String country, String city){
-        return weatherDataAccessService.selectByCC( country, city);
+    public Optional<WeatherInfoModel> getByCC(String country, String city) {
+        return weatherDataAccessService.selectByCC(country, city);
     }
-    public int addWeather(Weather weather){
-        return weatherDataAccessService.insertWeather(weather);
+
+    public void addWeather(WeatherInfoModel weather) {
+         weatherDataAccessService.insertWeather(weather);
     }
-    public void deleteAll(){
+
+    public void deleteAll() {
         weatherDataAccessService.deleteAll();
     }
 }

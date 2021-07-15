@@ -1,16 +1,12 @@
 package com.gmail.yeritsyankoryun.weather.model;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-
-import java.util.UUID;
-
-public class Weather
+public class WeatherInfoModel
 {
     private String country;
     private String city;
-    private int temperature;
+    private double temperature;
 
-    public Weather(String country, String city, int temperature) {
+    public WeatherInfoModel(String country, String city, double temperature) {
         this.country = country;
         this.city = city;
         this.temperature = temperature;
@@ -20,15 +16,23 @@ public class Weather
         return country;
     }
 
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public String getCity() {
         return city;
     }
 
-    public int getTemperature() {
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 }

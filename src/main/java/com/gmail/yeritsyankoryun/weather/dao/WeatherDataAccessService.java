@@ -1,6 +1,6 @@
 package com.gmail.yeritsyankoryun.weather.dao;
 
-import com.gmail.yeritsyankoryun.weather.model.Weather;
+import com.gmail.yeritsyankoryun.weather.model.WeatherInfoModel;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -9,24 +9,23 @@ import java.util.Optional;
 
 @Repository
 public class WeatherDataAccessService {
-    private static List<Weather> weathers = new ArrayList<>();
+    private static List<WeatherInfoModel> weathers = new ArrayList<>();
 
     static {
-        weathers.add(new Weather("Arm", "Yerevan", 37));
-        weathers.add(new Weather("Arm", "Abovyan", 27));
+        weathers.add(new WeatherInfoModel("Arm", "Yerevan", 37));
+        weathers.add(new WeatherInfoModel("Arm", "Abovyan", 27));
 
     }
 
-    public List<Weather> selectAllWeather() {
+    public List<WeatherInfoModel> selectAllWeather() {
         return weathers;
     }
 
-    public Optional<Weather> selectByCC(String country, String city) {
+    public Optional<WeatherInfoModel> selectByCC(String country, String city) {
         return weathers.stream().filter(weather -> weather.getCity().equals(city) && weather.getCountry().equals(country)).findFirst();
     }
-    public int insertWeather(Weather weather){
+    public void insertWeather(WeatherInfoModel weather){
         weathers.add(weather);
-        return 1;
     }
     public void deleteAll(){
         weathers.clear();
