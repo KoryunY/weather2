@@ -28,7 +28,9 @@ public class WeatherService {
     public void addWeather(WeatherInfoModel weather) {
          weatherDataAccessService.insertWeather(weather);
     }
-
+    public void deleteByCC(String country, String city){
+        weatherDataAccessService.deleteByCC(country,city);
+    }
     public void deleteAll() {
         weatherDataAccessService.deleteAll();
     }
