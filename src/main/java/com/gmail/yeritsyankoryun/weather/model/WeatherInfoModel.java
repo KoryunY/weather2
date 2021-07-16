@@ -1,10 +1,14 @@
 package com.gmail.yeritsyankoryun.weather.model;
 
+
 public class WeatherInfoModel
 {
     private String country;
     private String city;
     private double temperature;
+
+    public WeatherInfoModel() {
+    }
 
     public WeatherInfoModel(String country, String city, double temperature) {
         this.country = country;
