@@ -29,20 +29,17 @@ public class WeatherService {
             throw  new IllegalArgumentException("NUll",new Throwable(city==null?"City":"Country"));
         }
         return repository.findAll().stream()
-                .filter(weather -> weather.getId().equals(new WeatherInfoId(country,city)))
+                .filter(weather -> weather.equals(repository.getById(new WeatherInfoId(country,city))))
                 .map(weatherConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    public WeatherInfoModel getById(WeatherInfoDto dto) {
-        return repository.getById(dto.getWeatherInfoId());
-    }
     public void addWeather(WeatherInfoDto dto) {
         repository.saveAndFlush(weatherConverter.convertToModel(dto));
     }
 
     public void updateWeather(WeatherInfoDto dto) {
-        WeatherInfoModel temp = getById(dto);
+        WeatherInfoModel temp = repository.getById(new WeatherInfoId(dto.getCountry(),dto.getCity()));
         if (dto.getTemperature() != null)
             temp.setTemperature(dto.getTemperature());
         if (dto.getWindSpeed() != null)

@@ -10,11 +10,10 @@ import javax.validation.constraints.*;
 
 @IdClass(WeatherInfoId.class)
 public class WeatherInfoDto {
-    @Id
+
     @Size(min = 2, max = 3)
     private String country;
     @Size(min = 2)
-    @Id
     private String city;
     @Min(-90)
     @Max(60)
@@ -25,10 +24,6 @@ public class WeatherInfoDto {
     @Max(372)
     private Integer windSpeed; // in km/h
 
-    public WeatherInfoId getWeatherInfoId() {
-        return new WeatherInfoId(this.country, this.city);
-    }
-
     public String getCountry() {
         return country;
     }
@@ -37,12 +32,10 @@ public class WeatherInfoDto {
         return city;
     }
 
-    @Column(name = "temperature", nullable = false)
     public Double getTemperature() {
         return temperature;
     }
 
-    @Column(name = "type", nullable = false)
     public WeatherType getType() {
         return type;
     }
@@ -51,7 +44,6 @@ public class WeatherInfoDto {
         this.type = type;
     }
 
-    @Column(name = "windSpeed", nullable = false)
     public Integer getWindSpeed() {
         return windSpeed;
     }

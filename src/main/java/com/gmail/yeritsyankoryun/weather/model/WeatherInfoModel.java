@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 
 @Entity
 @IdClass(WeatherInfoId.class)
-@Table(name = "winfo")
+//@Table(name = "winfo")
 public class WeatherInfoModel {
     @Id
     @NotBlank
@@ -28,14 +28,13 @@ public class WeatherInfoModel {
     @Min(0)
     @Max(372)
     private int windSpeed; // in km/h
+
     @Autowired
     public WeatherInfoModel() {
     }
 
-    public void setId(WeatherInfoId id) {
-        id = id;
-    }
 
+    //@Column(name = "country", nullable = false)
     public String getCountry() {
         return country;
     }
@@ -44,6 +43,7 @@ public class WeatherInfoModel {
         this.country = country;
     }
 
+    //@Column(name = "city", nullable = false)
     public String getCity() {
         return city;
     }
@@ -52,16 +52,12 @@ public class WeatherInfoModel {
         this.city = city;
     }
 
-    public WeatherInfoId getId() {
-        return new WeatherInfoId(this.country, this.city);
-    }
-
-    @Column(name = "temperature", nullable = false)
+   // @Column(name = "temperature", nullable = false)
     public double getTemperature() {
         return temperature;
     }
 
-    @Column(name = "type", nullable = false)
+   // @Column(name = "type", nullable = false)
     public WeatherType getType() {
         return type;
     }
@@ -70,7 +66,7 @@ public class WeatherInfoModel {
         this.type = type;
     }
 
-    @Column(name = "windSpeed", nullable = false)
+    //@Column(name = "windSpeed", nullable = false)
     public int getWindSpeed() {
         return windSpeed;
     }

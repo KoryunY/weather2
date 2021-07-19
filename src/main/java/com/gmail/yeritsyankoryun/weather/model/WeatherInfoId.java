@@ -2,6 +2,8 @@ package com.gmail.yeritsyankoryun.weather.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
