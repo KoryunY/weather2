@@ -1,37 +1,39 @@
 package com.gmail.yeritsyankoryun.weather.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import org.apache.coyote.ActionHook;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 
+@Entity
+@IdClass(WeatherInfoId.class)
+@Table(name = "winfo")
 public class WeatherInfoModel {
-    @NotNull
+    @Id
+    @NotBlank
     @Size(min = 2, max = 3)
     private String country;
-    @NotNull
+    @Id
+    @NotBlank
     @Size(min = 2)
     private String city;
-    @NotNull
+    @Min(-90)
+    @Max(60)
     private double temperature; // in Celsius
     @Enumerated(EnumType.ORDINAL)
     @NotNull
     private WeatherType type;
-    @NotNull
+    @Min(0)
+    @Max(372)
     private int windSpeed; // in km/h
-
+    @Autowired
     public WeatherInfoModel() {
     }
 
-    public WeatherInfoModel(String country, String city, double temperature, WeatherType type, int windSpeed) {
-        this.country = country;
-        this.city = city;
-        this.temperature = temperature;
-        this.type=type;
-        this.windSpeed=windSpeed;
-
+    public void setId(WeatherInfoId id) {
+        id = id;
     }
 
     public String getCountry() {
@@ -50,10 +52,16 @@ public class WeatherInfoModel {
         this.city = city;
     }
 
+    public WeatherInfoId getId() {
+        return new WeatherInfoId(this.country, this.city);
+    }
+
+    @Column(name = "temperature", nullable = false)
     public double getTemperature() {
         return temperature;
     }
 
+    @Column(name = "type", nullable = false)
     public WeatherType getType() {
         return type;
     }
@@ -62,17 +70,16 @@ public class WeatherInfoModel {
         this.type = type;
     }
 
+    @Column(name = "windSpeed", nullable = false)
     public int getWindSpeed() {
         return windSpeed;
     }
 
     public void setWindSpeed(int windSpeed) {
-        if(windSpeed>0 && windSpeed<372)
         this.windSpeed = windSpeed;
     }
 
     public void setTemperature(double temperature) {
-        if (temperature > -90 && temperature < 60)
-            this.temperature = temperature;
+        this.temperature = temperature;
     }
 }

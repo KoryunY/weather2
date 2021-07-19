@@ -1,76 +1,68 @@
 package com.gmail.yeritsyankoryun.weather.controller;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.gmail.yeritsyankoryun.weather.dto.WeatherInfoDto;
-import com.gmail.yeritsyankoryun.weather.model.WeatherInfoModel;
-import com.gmail.yeritsyankoryun.weather.service.ConverterService;
 import com.gmail.yeritsyankoryun.weather.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/weather")
 public class WeatherController {
     private final WeatherService weatherService;
-    private final ConverterService converterService;
 
     @Autowired
-    public WeatherController(WeatherService weatherService, ConverterService converterService) {
+    public WeatherController(WeatherService weatherService) {
         this.weatherService = weatherService;
-        this.converterService = converterService;
     }
 
     @GetMapping
-    public List<WeatherInfoDto> getAllWeather() {
-        List<WeatherInfoModel> weathers = weatherService.getAllWeather();
-        return weathers.stream().map(converterService::convertToDto).collect(Collectors.toList());
-    }
-
-    @GetMapping(path = "temperature")
-    public double getTempByCC(@RequestBody WeatherInfoDto dto) {
-        WeatherInfoModel model = converterService.convertToModel(dto);
-        return weatherService.getByCC(model.getCountry(), model.getCity()).get().getTemperature();
+    public Object getWeatherInfo(@RequestParam(name = "country", required = false) String country,
+                                 @RequestParam(name = "city", required = false) String city) {
+        return weatherService.getWeatherInfo(country, city);
     }
 
     @PostMapping(path = "create")
-    public void create(@Valid @RequestBody WeatherInfoDto weatherDto) throws Exception {
-        if (weatherDto.getTemperature() != 0)
-            weatherService.addWeather(converterService.convertToModel(weatherDto));
-        else throw new Exception();
-    }
-
-    @PutMapping(path = "updateall")
-    public void updateAll(@Valid @RequestBody WeatherInfoDto weatherDto) throws Exception {
-        if (weatherDto.getTemperature() != 0 && weatherDto.getWindSpeed()!=0){
-            WeatherInfoModel temp=weatherService.getByCC(weatherDto.getCountry(), weatherDto.getCity()).get();
-            temp.setTemperature(weatherDto.getTemperature());
-            temp.setWindSpeed(weatherDto.getWindSpeed());
-            temp.setType(weatherDto.getType());
-        }
-        else throw new Exception();
+    public void create(@Valid @RequestBody WeatherInfoDto dto) {
+        weatherService.addWeather(dto);
     }
 
     @PutMapping(path = "update")
-    public void updateTemp(@Valid @RequestBody WeatherInfoDto weatherDto) throws Exception {
-        if (weatherDto.getTemperature() != 0)
-            weatherService.getByCC(weatherDto.getCountry(), weatherDto.getCity()).get().setTemperature(weatherDto.getTemperature());
-        else throw new Exception();
+    public void update(@Valid @RequestBody WeatherInfoDto dto) {
+        weatherService.updateWeather(dto);
     }
 
-    @DeleteMapping(path = "deletecc")
-    public void deleteByCC(@Valid @RequestBody WeatherInfoDto weatherDto) {
-        weatherService.deleteByCC(weatherDto.getCountry(), weatherDto.getCity());
-    }
 
     @DeleteMapping(path = "delete")
-    public void delete() {
-        weatherService.deleteAll();
+    public void delete(@RequestParam(name = "country",required = false) String country,
+                       @RequestParam(name = "city", required = false) String city) throws IllegalArgumentException {
+        weatherService.delete(country, city);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleValidationExceptions(
+            IllegalArgumentException ex) {
+        return String.valueOf(ex.getCause().getMessage()+" is "+ex.getMessage());
     }
 }

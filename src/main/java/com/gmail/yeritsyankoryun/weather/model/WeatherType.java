@@ -6,5 +6,4 @@ public enum WeatherType {
     RAIN,
     SNOW,
     FOG;
-
 }
