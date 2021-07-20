@@ -9,9 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -36,13 +34,13 @@ public class WeatherController {
     }
 
     @PutMapping(path = "update")
-    public void update(@Valid @RequestBody WeatherInfoDto dto) {
+    public void update(@Valid @RequestBody WeatherInfoDto dto) throws IllegalArgumentException {
         weatherService.updateWeather(dto);
     }
 
 
     @DeleteMapping(path = "delete")
-    public void delete(@RequestParam(name = "country",required = false) String country,
+    public void delete(@RequestParam(name = "country", required = false) String country,
                        @RequestParam(name = "city", required = false) String city) throws IllegalArgumentException {
         weatherService.delete(country, city);
     }
@@ -59,10 +57,11 @@ public class WeatherController {
         });
         return errors;
     }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IllegalArgumentException.class)
     public String handleValidationExceptions(
             IllegalArgumentException ex) {
-        return String.valueOf(ex.getCause().getMessage()+" is "+ex.getMessage());
+        return String.valueOf(ex.getCause().getMessage() + " " + ex.getMessage());
     }
 }

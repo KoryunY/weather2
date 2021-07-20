@@ -1,25 +1,28 @@
 package com.gmail.yeritsyankoryun.weather.dto;
 
 
-import com.gmail.yeritsyankoryun.weather.model.WeatherInfoId;
 import com.gmail.yeritsyankoryun.weather.model.WeatherType;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.*;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 
-@IdClass(WeatherInfoId.class)
 public class WeatherInfoDto {
-
+    @NotBlank
     @Size(min = 2, max = 3)
     private String country;
+    @NotBlank
     @Size(min = 2)
     private String city;
     @Min(-90)
     @Max(60)
-    private Double temperature; // in// Celsius
+    @Nullable
+    private Double temperature; // in Celsius
+    @Nullable
     @Enumerated(EnumType.ORDINAL)
     private WeatherType type;
+    @Nullable
     @Min(0)
     @Max(372)
     private Integer windSpeed; // in km/h
@@ -28,12 +31,24 @@ public class WeatherInfoDto {
         return country;
     }
 
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public String getCity() {
         return city;
     }
 
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public Double getTemperature() {
         return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
     }
 
     public WeatherType getType() {
@@ -49,11 +64,6 @@ public class WeatherInfoDto {
     }
 
     public void setWindSpeed(int windSpeed) {
-            this.windSpeed = windSpeed;
+        this.windSpeed = windSpeed;
     }
-
-    public void setTemperature(double temperature) {
-            this.temperature = temperature;
-    }
-
 }

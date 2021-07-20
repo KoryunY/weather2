@@ -2,8 +2,6 @@ package com.gmail.yeritsyankoryun.weather.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,11 +14,10 @@ public class WeatherInfoId implements Serializable {
     }
 
     @Autowired
-    public WeatherInfoId(String country,String city) {
+    public WeatherInfoId(String country, String city) {
         this.country = country;
         this.city = city;
     }
-
 
     @Override
     public boolean equals(Object o) {

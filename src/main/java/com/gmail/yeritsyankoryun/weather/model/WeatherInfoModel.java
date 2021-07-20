@@ -1,7 +1,5 @@
 package com.gmail.yeritsyankoryun.weather.model;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import org.apache.coyote.ActionHook;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
@@ -9,7 +7,6 @@ import javax.validation.constraints.*;
 
 @Entity
 @IdClass(WeatherInfoId.class)
-//@Table(name = "winfo")
 public class WeatherInfoModel {
     @Id
     @NotBlank
@@ -33,8 +30,6 @@ public class WeatherInfoModel {
     public WeatherInfoModel() {
     }
 
-
-    //@Column(name = "country", nullable = false)
     public String getCountry() {
         return country;
     }
@@ -43,7 +38,6 @@ public class WeatherInfoModel {
         this.country = country;
     }
 
-    //@Column(name = "city", nullable = false)
     public String getCity() {
         return city;
     }
@@ -52,12 +46,10 @@ public class WeatherInfoModel {
         this.city = city;
     }
 
-   // @Column(name = "temperature", nullable = false)
     public double getTemperature() {
         return temperature;
     }
 
-   // @Column(name = "type", nullable = false)
     public WeatherType getType() {
         return type;
     }
@@ -66,7 +58,6 @@ public class WeatherInfoModel {
         this.type = type;
     }
 
-    //@Column(name = "windSpeed", nullable = false)
     public int getWindSpeed() {
         return windSpeed;
     }
