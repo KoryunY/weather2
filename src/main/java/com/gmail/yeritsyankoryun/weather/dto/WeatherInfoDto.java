@@ -27,6 +27,17 @@ public class WeatherInfoDto {
     @Max(372)
     private Integer windSpeed; // in km/h
 
+    public WeatherInfoDto() {
+    }
+
+    public WeatherInfoDto(@NotBlank @Size(min = 2, max = 3) String country, @NotBlank @Size(min = 2) String city, @Nullable @Min(-90) @Max(60) Double temperature, @Nullable WeatherType type, @Nullable @Min(0) @Max(372) Integer windSpeed) {
+        this.country = country;
+        this.city = city;
+        this.temperature = temperature;
+        this.type = type;
+        this.windSpeed = windSpeed;
+    }
+
     public String getCountry() {
         return country;
     }

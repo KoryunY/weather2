@@ -8,6 +8,7 @@ import com.gmail.yeritsyankoryun.weather.service.converter.WeatherConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,29 +28,34 @@ public class WeatherService {
             return repository.findAll().stream().map(weatherConverter::convertToDto)
                     .collect(Collectors.toList());
         else if (country == null || city == null) {
-            throw new IllegalArgumentException("is NUll", new Throwable(city == null ? "City" : "Country"));
+            throw new IllegalArgumentException("Cant access weather info without  " + (city == null ? "City" : "Country") + " field");
         }
-        return repository.findAll().stream()
-                .filter(weather -> weather.equals(repository.getById(new WeatherInfoId(country, city))))
-                .map(weatherConverter::convertToDto)
-                .collect(Collectors.toList());
+        if (!repository.existsById(new WeatherInfoId(country, city)))
+            throw new UnsupportedOperationException("Weather Info for " + country + " and " + city + "does not exists!.");
+        List<WeatherInfoDto> weatherInfoDtoList = new ArrayList<>();
+        WeatherInfoDto dto = weatherConverter.convertToDto(repository.getById(new WeatherInfoId(country, city)));
+        weatherInfoDtoList.add(dto);
+        return weatherInfoDtoList;
     }
 
     public void addWeather(WeatherInfoDto dto) {
-        repository.save(weatherConverter.convertToModel(dto));
+        WeatherInfoModel model = weatherConverter.convertToModel(dto);
+        repository.save(model);
     }
 
-    public void updateWeather(WeatherInfoDto dto) throws IllegalArgumentException{
-        if(repository.existsById(new WeatherInfoId(dto.getCountry(), dto.getCity())))
-            repository.save(weatherConverter.convertToModel(dto));
-        else throw new IllegalArgumentException("does not exists!.", new Throwable("Weather Info Model"));
+    public void updateWeather(WeatherInfoDto dto) throws UnsupportedOperationException {
+        if (repository.existsById(new WeatherInfoId(dto.getCountry(), dto.getCity()))) {
+            WeatherInfoModel model = weatherConverter.convertToModel(dto);
+            repository.save(model);
+        } else
+            throw new UnsupportedOperationException("Weather Info for " + dto.getCity() + " and " + dto.getCountry() + " does not exists!.");
     }
 
     public void delete(String country, String city) throws IllegalArgumentException {
         if (country == null && city == null)
             repository.deleteAll();
         else if (country == null || city == null) {
-            throw new IllegalArgumentException("is NUll", new Throwable(city == null ? "City" : "Country"));
+            throw new IllegalArgumentException("Cant access weather info without  " + (city == null ? "City" : "Country") + " field.");
         } else repository.deleteById(new WeatherInfoId(country, city));
     }
 }

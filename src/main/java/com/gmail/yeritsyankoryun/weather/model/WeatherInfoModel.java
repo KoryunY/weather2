@@ -30,6 +30,14 @@ public class WeatherInfoModel {
     public WeatherInfoModel() {
     }
 
+    public WeatherInfoModel(@NotBlank @Size(min = 2, max = 3) String country, @NotBlank @Size(min = 2) String city, @Min(-90) @Max(60) double temperature, @NotNull WeatherType type, @Min(0) @Max(372) int windSpeed) {
+        this.country = country;
+        this.city = city;
+        this.temperature = temperature;
+        this.type = type;
+        this.windSpeed = windSpeed;
+    }
+
     public String getCountry() {
         return country;
     }
