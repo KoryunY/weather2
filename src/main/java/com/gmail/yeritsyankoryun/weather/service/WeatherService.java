@@ -7,6 +7,7 @@ import com.gmail.yeritsyankoryun.weather.repository.WeatherRepository;
 import com.gmail.yeritsyankoryun.weather.service.converter.WeatherConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,10 @@ public class WeatherService {
 
     public void addWeather(WeatherInfoDto dto) {
         WeatherInfoModel model = weatherConverter.convertToModel(dto);
-        repository.save(model);
+        String validationResult=addValidation(dto);
+        if (validationResult == null)
+            repository.save(model);
+        else throw new IllegalArgumentException("Failed Validation for: "+validationResult+"\n"+"Message: should not be empty");
     }
 
     public void updateWeather(WeatherInfoDto dto) throws UnsupportedOperationException {
@@ -48,7 +52,7 @@ public class WeatherService {
             WeatherInfoModel model = weatherConverter.convertToModel(dto);
             repository.save(model);
         } else
-            throw new UnsupportedOperationException("Weather Info for " + dto.getCity() + " and " + dto.getCountry() + " does not exists!.");
+            throw new UnsupportedOperationException("Weather Info for " + dto.getCity() + " and " + dto.getCountry() + " does not exist!");
     }
 
     public void delete(String country, String city) throws IllegalArgumentException {
@@ -57,5 +61,12 @@ public class WeatherService {
         else if (country == null || city == null) {
             throw new IllegalArgumentException("Cant access weather info without  " + (city == null ? "City" : "Country") + " field.");
         } else repository.deleteById(new WeatherInfoId(country, city));
+    }
+
+    public String addValidation(WeatherInfoDto dto) {
+        if (dto.getTemperature() == null) return "temperature";
+        if (dto.getWindSpeed() == null) return "windSpeed";
+        if (dto.getType() == null) return "type";
+        return null;
     }
 }
