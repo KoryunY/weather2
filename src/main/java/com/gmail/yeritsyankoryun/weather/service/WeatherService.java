@@ -33,10 +33,8 @@ public class WeatherService {
         }
         if (!repository.existsById(new WeatherInfoId(country, city)))
             throw new UnsupportedOperationException("Weather Info for " + country + " and " + city + "does not exists!.");
-        List<WeatherInfoDto> weatherInfoDtoList = new ArrayList<>();
         WeatherInfoDto dto = weatherConverter.convertToDto(repository.getById(new WeatherInfoId(country, city)));
-        weatherInfoDtoList.add(dto);
-        return weatherInfoDtoList;
+        return List.of(dto);
     }
 
     public void addWeather(WeatherInfoDto dto) {
